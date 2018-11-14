@@ -37,6 +37,19 @@ var cubeApp = {
 	normalMap: null
 };
 
+/**
+* This function is called initially, loads normal map image resource, then calls init
+* Necessary for resource to be loaded in time
+*/
+cubeApp.load = function(){
+    //set up the material loader
+    var loader = new THREE.TextureLoader();
+    loader.load("diceNMap.png",
+		function(tex2){
+			cubeApp.normalMap = tex2;
+			cubeApp.init()
+		});
+}
 
 
 
