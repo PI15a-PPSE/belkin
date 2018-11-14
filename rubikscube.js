@@ -225,6 +225,9 @@ cubeApp.run = function(){
 * Parameters: evt is key event, solve is boolean
 */
 cubeApp.onKeyDown = function(evt, solve){
+	if(evt.code == "ShiftRight" || evt.code == 'ShiftLeft'){ //Reverse direction
+		this.direction = -1*this.direction;
+	}
 }
 
 
