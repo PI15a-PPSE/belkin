@@ -147,7 +147,11 @@ cubeApp.createRubiks = function(){
 }
 
 
-
+/**
+* Run method that is called repeatedly (not recursion)
+*/
+cubeApp.run = function(){
+}
 
 
 
