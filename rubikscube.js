@@ -156,6 +156,29 @@ cubeApp.createRubiks = function(){
 * This function rotates the specified cube face in the given direction
 */
 cubeApp.makeMove = function(move, direction){
+	var angle = Math.PI/4 * direction // Rotation amount
+	if(move == 'r' || move == 'l'){ // Left or right vertical move
+		var xPos = -10;
+		if(move == 'r'){
+			xPos = -6;
+		}
+		if(this.prevMove != move || this.prevMove == undefined){ // Add correct cubes if necessary
+			this.active = []
+			for(var i = 0; i < this.rubiksCube.children.length; i ++){
+				if(this.rubiksCube.children[i].position.x < (xPos + 1) && this.rubiksCube.children[i].position.x > (xPos - 1)){
+					this.active.push(this.rubiksCube.children[i]);
+				}
+			}
+		}
+		this.pivotFace.rotation.set( 0, 0, 0 );
+		this.pivotFace.updateMatrixWorld();
+
+		for ( var i in this.active ) { //Attach cubes to pivotFace from cube
+	    	THREE.SceneUtils.attach( this.active[ i ], this.rubiksCube, this.pivotFace );
+		}
+		this.pivotFace.rotateX(angle) //Perform rotation
+	}
+
 }
 
 
