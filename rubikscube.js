@@ -144,6 +144,12 @@ cubeApp.createRubiks = function(){
 	box.getCenter( this.pivotFace.position );
 	this.rubiksCube.position.multiplyScalar( - 1 );
 
+	this.pivot = new THREE.Group(); // Pivot for entire cube
+	
+	this.scene.add( this.pivot );
+	this.pivot.add( this.rubiksCube );
+	this.pivot.add(this.pivotFace);
+
 }
 
 
