@@ -228,8 +228,244 @@ cubeApp.onKeyDown = function(evt, solve){
 	if(evt.code == "ShiftLeft" || evt.code == 'ShiftRight'){ //Reverse direction
 		this.direction = -1*this.direction;
 	}
+	switch(evt.code){
+		case "KeyU":
+			if(this.locked[0] != true){ // Make sure face isn't locked
+				this.uRot += 45; // Update rotation amount (for screen text)
+				if(solve != true){ // If theyre not trying to solve, push it to stack
+					this.stack.push({move: 'u', direction: this.direction})
+				}
+				this.makeMove('u',this.direction) //Make the move
+				if(this.uRot % 90 != 0){ //If it isnt rotate at a 90 degree angle
+					this.lockFaces(0); // Lock all the other faces
+				}
+				else{
+					this.unlockFaces(); //Otherwise, unlike the other faces
+				}
+			}
+			break;
+		case "KeyD":
+			if(this.locked[1] != true){
+				this.dRot += 45;
+				if(solve != true){
+					this.stack.push({move: 'd', direction: this.direction})
+				}
+				this.makeMove('d',this.direction)
+				if(this.dRot % 90 != 0){
+					this.lockFaces(1);
+				}
+				else{
+					this.unlockFaces();
+				}
+			}
+			break;
+		case "KeyR":
+			if(this.locked[2] != true){
+				this.rRot += 45;
+				if(solve != true){
+					this.stack.push({move: 'r', direction: this.direction})
+				}
+				this.makeMove('r',this.direction)
+				if(this.rRot % 90 != 0){
+					this.lockFaces(2);
+				}
+				else{
+					this.unlockFaces();
+				}
+			}
+			break;
+		case "KeyL":
+			if(this.locked[3] != true){
+				this.lRot += 45;
+				if(solve != true){
+					this.stack.push( {move: 'l', direction: this.direction} )
+				}
+				this.makeMove('l',this.direction)
+				if(this.lRot % 90 != 0){
+					this.lockFaces(3);
+				}
+				else{
+					this.unlockFaces();
+				}
+			}
+			break;
+		case "KeyF":
+			if(this.locked[4] != true){
+				this.fRot += 45;
+				if(solve != true){
+					this.stack.push({move: 'f',direction: this.direction})
+				}
+				this.makeMove('f',-1 * this.direction)
+				if(this.fRot % 90 != 0){
+					this.lockFaces(4);
+				}
+				else{
+					this.unlockFaces();
+				}
+			}
+			break;
+		case "KeyB":
+			if(this.locked[5] != true){
+				this.bRot += 45;
+				if(solve != true){
+					this.stack.push({move: 'b',direction: this.direction})
+				}
+				this.makeMove('b',(-1 *this.direction))
+				if(this.bRot % 90 != 0){
+					this.lockFaces(5);
+				}
+				else{
+					this.unlockFaces();
+				}
+			}
+			break;
+		case "ArrowLeft": //Update camera to new position
+			this.camera.position.y = 7;
+			this.camera.position.x = -20
+			this.camera.lookAt(new THREE.Vector3(0,0,1)) //reset vector
+			break;
+		case "ArrowRight": //Update camera to new position		 
+			this.camera.position.y = 7;
+			this.camera.position.x = 20
+			this.camera.lookAt(new THREE.Vector3(0,0,1)) //reset vector
+			break;
+		case "ArrowUp": //Update camera to new position
+			this.camera.position.y = 10;
+			this.camera.position.x = 0;
+			this.camera.lookAt(new THREE.Vector3(0,0,1)) //reset vector
+			break;
+		case "ArrowDown": //Update camera to new position
+			this.camera.position.y = -10;
+			this.camera.position.x = 0;
+			this.camera.lookAt(new THREE.Vector3(0,0,1)) //reset vector
+			break;
+		case "KeyS": //Turn scramble on/off
+			this.scramble = !this.scramble;
+			break;
+		case "KeyA": // Start 360 degree rotation
+			this.animate = true;
+			this.lockFaces();
+			break;
+		case "Enter": //Start solve
+			this.solve = true;
+			break;
+	}
 }
 
+/**
+* Print text to canvas screen
+*/
+function canvasText(){
+	// look up the text canvas.
+	var textCanvas = document.getElementById("text");
+	 
+	// make a 2D context for it
+	var ctx = textCanvas.getContext("2d");
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	ctx.font="20px Arial";
+	ctx.fillStyle = "black";
+    ctx.fillText('CUBE CONTROLS:', 50, 40);
+    ctx.font="15px Arial";
+
+    ctx.fillText('U - UP | ' + cubeApp.uRot%360+' Degrees | Locked: ' + cubeApp.locked[0], 50, 80);
+    ctx.fillText('D - DOWN | ' + cubeApp.dRot%360+' Degrees | Locked: ' + cubeApp.locked[1], 50, 120);
+	ctx.fillText('L - LEFT | ' + cubeApp.lRot%360+' Degrees | Locked: ' + cubeApp.locked[3], 50, 160);
+    ctx.fillText('R - RIGHT | ' + cubeApp.rRot%360+' Degrees | Locked: ' + cubeApp.locked[2], 50, 200);
+	ctx.fillText('F - FRONT | ' + cubeApp.fRot%360+' Degrees | Locked: ' + cubeApp.locked[4], 50, 240);
+    ctx.fillText('B - BACK | ' + cubeApp.bRot%360+' Degrees | Locked: ' + cubeApp.locked[5], 50, 280);
+    if(cubeApp.direction == 1){
+    	ctx.fillText('Rotation Direction: Normal', 50, 310);
+    }
+    else{
+    	ctx.fillText('Rotation Direction: Inverted' , 50, 310);
+    }
+    ctx.fillText('** Switch Directions by pressing Shift' , 50, 330);
+
+    ctx.font="20px Arial";
+    ctx.fillText('OTHER CONTROLS:', 50, 380);
+    ctx.font="15px Arial";
+
+    ctx.fillText('Left Camera View - Left Arrow', 50, 400);
+    ctx.fillText('Right Camera View - Right Arrow', 50, 420);
+	ctx.fillText('Normal Camera View - Up Arrow', 50, 440);
+ 	ctx.fillText('Bottom Camera View - Down Arrow', 50, 460);
+    ctx.fillText('Start/Stop Scramble - S', 50, 480);
+    ctx.fillText('Animate - A', 50, 500);
+    ctx.fillText('PRESS ENTER TO SOLVE', 50, 520);
+ }
+/**
+* Lock all the faces (0-5) except parameter face 
+*/
+ cubeApp.lockFaces = function(face){
+	for(var i = 0; i < this.locked.length; i ++){
+		if(i != face){
+			this.locked[i] = true;
+		}
+	}
+}
+/**
+* Unlock every face
+*/
+cubeApp.unlockFaces = function(){
+	for(var i = 0; i < this.locked.length; i ++){
+		this.locked[i] = false;
+	}	
+}
+/**
+* Scramble the cube (Called repeatedly by run() as necessary)
+*/
+cubeApp.scrambleCube = function(){
+	var evt = {code: null};
+	var moves = ['KeyD','KeyU','KeyL','KeyR','KeyB','KeyF'];
+	var move = moves[Math.ceil(Math.random()* 5)]; // Get random key move
+	evt.code = move;
+	this.onKeyDown(evt) // Make the move
+}
+/**
+* Animate the cube (Called repeatedly by run func until 360 degree rotation completed)
+*/
+cubeApp.animateCube = function(){
+	this.pivot.rotateY(Math.PI/32)
+}
+/**
+* Solve the cube (Called repeatedly by run func until solved)
+*/
+cubeApp.solveCube = function(){
+	var move = this.stack[this.stack.length-1].move; //Pop top move off stack
+	var direction = this.stack[this.stack.length-1].direction;  //Pop top direction off stack
+	this.stack.splice(this.stack.length-1) // Remove from stack
+	if(direction == -1){ //set direction to opposite of move's
+		this.direction = 1;
+	}
+	else{
+		this.direction = -1;
+	}
+	// Make necessary move and set "solve" to true
+	if(move == 'r'){
+		this.rRot -= 90;
+		this.onKeyDown({code : 'KeyR'}, true)
+	}
+	if(move == 'l'){
+		this.lRot -= 90;
+		this.onKeyDown({code : 'KeyL'}, true)
+	}
+	if(move == 'u'){
+		this.uRot -= 90;
+		this.onKeyDown({code : 'KeyU'}, true)
+	}
+	if(move == 'd'){
+		this.dRot -= 90;
+		this.onKeyDown({code : 'KeyD'}, true)
+	}
+	if(move == 'f'){
+		this.fRot -= 90;
+		this.onKeyDown({code : 'KeyF'}, true)
+	}
+	if(move == 'b'){
+		this.bRot -= 90;
+		this.onKeyDown({code : 'KeyB'}, true)
+	}
+}
 
 
 
