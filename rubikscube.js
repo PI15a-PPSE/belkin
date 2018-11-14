@@ -137,6 +137,12 @@ cubeApp.createRubiks = function(){
 		}
 		yPos += this.SPACING;
 	}
+	// "box" referenced from docs. Allows center position to be set/maintained for cube
+	var box = new THREE.Box3().setFromObject( this.rubiksCube );
+	this.pivotFace = new THREE.Object3D(); // Pivot for face that is going to rotate
+	box.getCenter( this.rubiksCube.position ); // this re-sets the obj position
+	box.getCenter( this.pivotFace.position );
+	this.rubiksCube.position.multiplyScalar( - 1 );
 
 }
 
