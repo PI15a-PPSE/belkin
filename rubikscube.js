@@ -220,7 +220,12 @@ cubeApp.run = function(){
 }
 
 
-
+/**
+* Event listener for keyboard
+* Parameters: evt is key event, solve is boolean
+*/
+cubeApp.onKeyDown = function(evt, solve){
+}
 
 
 
