@@ -151,6 +151,16 @@ cubeApp.createRubiks = function(){
 * Run method that is called repeatedly (not recursion)
 */
 cubeApp.run = function(){
+	// Set timeout used to slow function calls down (otherwise cube animations occur too quickly)
+	setTimeout(function(){
+		requestAnimationFrame( function(){ cubeApp.run(); } ); 
+	}, 100);
+	//Render scene from perspective of camera
+	this.renderer.render(this.scene, this.camera);
+
+	// Update screen to text
+	canvasText();
+
 }
 
 
