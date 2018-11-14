@@ -179,8 +179,45 @@ cubeApp.makeMove = function(move, direction){
 		this.pivotFace.rotateX(angle) //Perform rotation
 	}
 
+
 }
 
+/**
+* Run method that is called repeatedly (not recursion)
+*/
+cubeApp.run = function(){
+	// Set timeout used to slow function calls down (otherwise cube animations occur too quickly)
+	setTimeout(function(){
+		requestAnimationFrame( function(){ cubeApp.run(); } ); 
+	}, 100);
+	//Render scene from perspective of camera
+	this.renderer.render(this.scene, this.camera);
+
+	// Update screen to text
+	canvasText();
+
+	if(this.scramble == true){ // Scramble cube if Key "S" is pressed
+		this.scrambleCube()
+	}
+	if(this.animate == true){ // Animate cube 360 degrees if "A" is pressed
+		this.animateAmt += .09817477132239698; //About Pi/32 (These are necessary due to rounding differences with Math.PI)
+		if(this.animateAmt == 6.283185364633411){ //About 2 PI, Couldn't find a way around hard-coding these (see above)
+			this.animateAmt = 0;
+			this.animate = false;
+			this.unlockFaces();
+		}
+		this.animateCube() //func gets called until 360 degree rotation occurs
+	}
+	if(this.solve == true){ // Solve cube if Enter is pressed
+		if(this.stack.length == 0){
+			this.solve = false;
+			this.direction *= -1 //Invert direction back to normal
+		}
+		else{
+			this.solveCube() //func gets called until cube is solved
+		}
+	}
+}
 
 
 
