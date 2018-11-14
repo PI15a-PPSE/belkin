@@ -101,7 +101,12 @@ cubeApp.init = function(){
 	this.run();
 };
 
+/**
+* This function creates the rubiks cube and all the necessary groups to make it move/rotate
+*/
+cubeApp.createRubiks = function(){
 
+}
 
 
 
