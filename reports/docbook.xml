@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article version="5.1" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xila="http://www.w3.org/2001/XInclude/local-attributes"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:trans="http://docbook.org/ns/transclusion"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <info>
+    <title>Программный Продукт "Tic-Tac-Toe"</title>
+
+    <author>
+      <personname><firstname>Dmitry</firstname><surname>Belkin</surname></personname>
+
+      <affiliation>
+        <orgname>Belkin Dmitry Org.</orgname>
+      </affiliation>
+    </author>
+
+    <pubdate>01-06-2018</pubdate>
+  </info>
+
+  <section>
+    <title>Описание продукта</title>
+
+    <para>Программный продукт <emphasis role="bold">Rubik's Cube</emphasis>был
+    разработан для развлечения. Игра содержит в себе кубик рубика 3х3
+    для одного игрока.</para>
+  </section>
+
+  <section>
+    <title>Первый запуск</title>
+
+    <para>При первом запуске игры пользователю предоставлен 3D кубик-рубика с подсказкой, которая содержит
+    управление, движения кубика обрабатывается следующей
+    функцией:</para>
+
+    <programlisting>cubeApp.makeMove = function(move, direction){
+	var angle = Math.PI/4 * direction // Rotation amount
+	if(move == 'r' || move == 'l'){ // Left or right vertical move
+		var xPos = -10;
+		if(move == 'r'){
+			xPos = -6;
+		}
+		if(this.prevMove != move || this.prevMove == undefined){ // Add correct cubes if necessary
+			this.active = []
+			for(var i = 0; i < this.rubiksCube.children.length; i ++){
+				if(this.rubiksCube.children[i].position.x < (xPos + 1) && this.rubiksCube.children[i].position.x > (xPos - 1)){
+					this.active.push(this.rubiksCube.children[i]);
+				}
+			}
+		}
+		this.pivotFace.rotation.set( 0, 0, 0 );
+		this.pivotFace.updateMatrixWorld();
+
+		for ( var i in this.active ) { //Attach cubes to pivotFace from cube
+	    	THREE.SceneUtils.attach( this.active[ i ], this.rubiksCube, this.pivotFace );
+		}
+		this.pivotFace.rotateX(angle) //Perform rotation
+	}
+
+
+}</programlisting>
+
+    <para>Нажатие клавиш обрабатывается ниже:</para>
+
+    <programlisting>cubeApp.onKeyDown = function(evt, solve){
+	if(evt.code == "ShiftLeft" || evt.code == 'ShiftRight'){ //Reverse direction
+		this.direction = -1*this.direction;
+	}
+	switch(evt.code){
+		case "KeyU":
+			if(this.locked[0] != true){ // Make sure face isn't locked
+				this.uRot += 45; // Update rotation amount (for screen text)
+				if(solve != true){ // If theyre not trying to solve, push it to stack
+					this.stack.push({move: 'u', direction: this.direction})
+				}
+				this.makeMove('u',this.direction) //Make the move
+				if(this.uRot % 90 != 0){ //If it isnt rotate at a 90 degree angle
+					this.lockFaces(0); // Lock all the other faces
+				}
+				else{
+					this.unlockFaces(); //Otherwise, unlike the other faces
+				}
+			}
+			break;
+		case "KeyD":
+			if(this.locked[1] != true){
+				this.dRot += 45;
+				if(solve != true){
+					this.stack.push({move: 'd', direction: this.direction})
+				}
+				this.makeMove('d',this.direction)
+				if(this.dRot % 90 != 0){
+					this.lockFaces(1);
+				}
+				else{
+					this.unlockFaces();
+				}
+			}
+			break;
+		case "KeyR":
+			if(this.locked[2] != true){
+				this.rRot += 45;
+				if(solve != true){
+					this.stack.push({move: 'r', direction: this.direction})
+				}
+				this.makeMove('r',this.direction)
+				if(this.rRot % 90 != 0){
+					this.lockFaces(2);
+				}
+				else{
+					this.unlockFaces();
+				}
+			}
+			break;
+		case "KeyL":
+			if(this.locked[3] != true){
+				this.lRot += 45;
+				if(solve != true){
+					this.stack.push( {move: 'l', direction: this.direction} )
+				}
+				this.makeMove('l',this.direction)
+				if(this.lRot % 90 != 0){
+					this.lockFaces(3);
+				}
+				else{
+					this.unlockFaces();
+				}
+			}
+			break;
+		case "KeyF":
+			if(this.locked[4] != true){
+				this.fRot += 45;
+				if(solve != true){
+					this.stack.push({move: 'f',direction: this.direction})
+				}
+				this.makeMove('f',-1 * this.direction)
+				if(this.fRot % 90 != 0){
+					this.lockFaces(4);
+				}
+				else{
+					this.unlockFaces();
+				}
+			}
+			break;
+		case "KeyB":
+			if(this.locked[5] != true){
+				this.bRot += 45;
+				if(solve != true){
+					this.stack.push({move: 'b',direction: this.direction})
+				}
+				this.makeMove('b',(-1 *this.direction))
+				if(this.bRot % 90 != 0){
+					this.lockFaces(5);
+				}
+				else{
+					this.unlockFaces();
+				}
+			}
+			break;
+		case "ArrowLeft": //Update camera to new position
+			this.camera.position.y = 7;
+			this.camera.position.x = -20
+			this.camera.lookAt(new THREE.Vector3(0,0,1)) //reset vector
+			break;
+		case "ArrowRight": //Update camera to new position		 
+			this.camera.position.y = 7;
+			this.camera.position.x = 20
+			this.camera.lookAt(new THREE.Vector3(0,0,1)) //reset vector
+			break;
+		case "ArrowUp": //Update camera to new position
+			this.camera.position.y = 10;
+			this.camera.position.x = 0;
+			this.camera.lookAt(new THREE.Vector3(0,0,1)) //reset vector
+			break;
+		case "ArrowDown": //Update camera to new position
+			this.camera.position.y = -10;
+			this.camera.position.x = 0;
+			this.camera.lookAt(new THREE.Vector3(0,0,1)) //reset vector
+			break;
+		case "KeyS": //Turn scramble on/off
+			this.scramble = !this.scramble;
+			break;
+		case "KeyA": // Start 360 degree rotation
+			this.animate = true;
+			this.lockFaces();
+			break;
+		case "Enter": //Start solve
+			this.solve = true;
+			break;
+	}
+}</programlisting>
+
+    <para>Так же в игре присутствует авто-прохождение, код предоставлен ниже:</para>
+
+    <programlisting>cubeApp.solveCube = function(){
+	var move = this.stack[this.stack.length-1].move; //Pop top move off stack
+	var direction = this.stack[this.stack.length-1].direction;  //Pop top direction off stack
+	this.stack.splice(this.stack.length-1) // Remove from stack
+	if(direction == -1){ //set direction to opposite of move's
+		this.direction = 1;
+	}
+	else{
+		this.direction = -1;
+	}
+	// Make necessary move and set "solve" to true
+	if(move == 'r'){
+		this.rRot -= 90;
+		this.onKeyDown({code : 'KeyR'}, true)
+	}
+	if(move == 'l'){
+		this.lRot -= 90;
+		this.onKeyDown({code : 'KeyL'}, true)
+	}
+	if(move == 'u'){
+		this.uRot -= 90;
+		this.onKeyDown({code : 'KeyU'}, true)
+	}
+	if(move == 'd'){
+		this.dRot -= 90;
+		this.onKeyDown({code : 'KeyD'}, true)
+	}
+	if(move == 'f'){
+		this.fRot -= 90;
+		this.onKeyDown({code : 'KeyF'}, true)
+	}
+	if(move == 'b'){
+		this.bRot -= 90;
+		this.onKeyDown({code : 'KeyB'}, true)
+	}
+}</programlisting>
+
+    <para>Таким образом, было рассмотрено 3 варианта развития событий, с
+    приведенным кодом.</para>
+  </section>
+</article>
