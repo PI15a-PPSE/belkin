@@ -152,7 +152,11 @@ cubeApp.createRubiks = function(){
 
 }
 
-
+/**
+* This function rotates the specified cube face in the given direction
+*/
+cubeApp.makeMove = function(move, direction){
+}
 
 
 
