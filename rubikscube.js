@@ -36,7 +36,6 @@ var cubeApp = {
     direction: 1,
     normalMap: null
 };
-
 /**
 * This function is called initially, loads normal map image resource, then calls init
 * Necessary for resource to be loaded in time
@@ -50,6 +49,7 @@ cubeApp.load = function(){
             cubeApp.init()
         });
 }
+
 /**
 * Initializes scene, camera, renderer, lights then creates cube and runs app
 */
@@ -149,7 +149,6 @@ cubeApp.createRubiks = function(){
     this.scene.add( this.pivot );
     this.pivot.add( this.rubiksCube );
     this.pivot.add(this.pivotFace);
-
 }
 
 /**
@@ -178,8 +177,54 @@ cubeApp.makeMove = function(move, direction){
         }
         this.pivotFace.rotateX(angle) //Perform rotation
     }
-
-
+    //Horizontal move
+    else if(move == 'u' || move == 'd'){
+        var yPos = 0;
+        if(move == 'u'){
+            yPos = 4;
+        }
+        if(this.prevMove != move || this.prevMove == undefined){
+            this.active = []
+            for(var i = 0; i < this.rubiksCube.children.length; i ++){
+                if(this.rubiksCube.children[i].position.y > (yPos - 1) && this.rubiksCube.children[i].position.y < (yPos + 1)){
+                    this.active.push(this.rubiksCube.children[i]);
+                }
+            }
+        }
+        this.pivotFace.rotation.set( 0, 0, 0 );
+        this.pivotFace.updateMatrixWorld();
+        for ( var i in this.active ) {
+            THREE.SceneUtils.attach( this.active[ i ], this.rubiksCube, this.pivotFace );
+        }
+        this.pivotFace.rotateY(angle)
+    }
+    //front move
+    else if(move == 'f' || move == 'b'){
+        var zPos = 0;
+        if(move == 'f'){
+            zPos = 4
+        }
+        if(this.prevMove != move || this.prevMove == undefined){
+            this.active = []
+            for(var i = 0; i < this.rubiksCube.children.length; i ++){
+                if(this.rubiksCube.children[i].position.z > (zPos - 1) && this.rubiksCube.children[i].position.z < (zPos + 1)){
+                    this.active.push(this.rubiksCube.children[i]);
+                }
+            }
+        }
+        this.pivotFace.rotation.set( 0, 0, 0 );
+        this.pivotFace.updateMatrixWorld();
+        for ( var i in this.active ) {
+            THREE.SceneUtils.attach( this.active[ i ], this.rubiksCube, this.pivotFace );
+        }
+        this.pivotFace.rotateZ(angle)   
+    }
+    this.pivotFace.updateMatrixWorld(); //Update matrix
+        for ( var i in this.active ) { //Detach cubes from pivot and re-attach to rubiks cube
+            this.rubiksCube.children[ i ].updateMatrixWorld(); // if not done by the renderer
+            THREE.SceneUtils.detach( this.active[ i ], this.pivotFace, this.rubiksCube );
+        }
+    this.prevMove = move; //Set the previous move
 }
 
 /**
@@ -218,7 +263,6 @@ cubeApp.run = function(){
         }
     }
 }
-
 
 /**
 * Event listener for keyboard
@@ -466,6 +510,3 @@ cubeApp.solveCube = function(){
         this.onKeyDown({code : 'KeyB'}, true)
     }
 }
-
-
-
