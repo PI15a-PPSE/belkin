@@ -510,3 +510,4 @@ cubeApp.solveCube = function(){
         this.onKeyDown({code : 'KeyB'}, true)
     }
 }
+
