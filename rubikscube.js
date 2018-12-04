@@ -1,12 +1,12 @@
-﻿/* 
-    Rubik's Cube
-    3D Game
+﻿/** 
+*    Rubik's Cube
+*    3D Game
+*
+*    @author Dmitriy Belkin
+*    @version 1.0
+*    @date 18.11.2018
+**/
 
-    @author Dmitriy Belkin
-    @version 1.0
-    @date 18.11.2018
-*/
-// cubeApp definition
 var cubeApp = {
     renderer: null,
     scene: null,
