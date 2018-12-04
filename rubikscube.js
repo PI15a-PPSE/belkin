@@ -1,4 +1,11 @@
-﻿
+﻿/* 
+    Rubik's Cube
+    3D Game
+
+    @author Dmitriy Belkin
+    @version 1.0
+    @date 18.11.2018
+*/
 // cubeApp definition
 var cubeApp = {
     renderer: null,
@@ -37,8 +44,12 @@ var cubeApp = {
     normalMap: null
 };
 /**
-* This function is called initially, loads normal map image resource, then calls init
-* Necessary for resource to be loaded in time
+*   This function is called initially, loads normal map image resource, then calls init
+*   Necessary for resource to be loaded in time
+* 
+*   Constructor
+*   @param null
+*   @returns null
 */
 cubeApp.load = function(){
     //set up the material loader
@@ -51,7 +62,11 @@ cubeApp.load = function(){
 }
 
 /**
-* Initializes scene, camera, renderer, lights then creates cube and runs app
+*   Initializes scene, camera, renderer, lights then creates cube and runs app
+* 
+*   init
+*   @params null
+*   @returns null
 */
 cubeApp.init = function(){
     //Pass an object that contains parameters
@@ -103,6 +118,10 @@ cubeApp.init = function(){
 
 /**
 * This function creates the rubiks cube and all the necessary groups to make it move/rotate
+*
+* createRubiks
+* @params null
+* @returns null
 */
 cubeApp.createRubiks = function(){
     //Create geometry
@@ -153,6 +172,9 @@ cubeApp.createRubiks = function(){
 
 /**
 * This function rotates the specified cube face in the given direction
+*
+* @params null
+* @returns null
 */
 cubeApp.makeMove = function(move, direction){
     var angle = Math.PI/4 * direction // Rotation amount
@@ -229,6 +251,9 @@ cubeApp.makeMove = function(move, direction){
 
 /**
 * Run method that is called repeatedly (not recursion)
+*
+* @params null
+* @returns null
 */
 cubeApp.run = function(){
     // Set timeout used to slow function calls down (otherwise cube animations occur too quickly)
@@ -265,8 +290,13 @@ cubeApp.run = function(){
 }
 
 /**
-* Event listener for keyboard
-* Parameters: evt is key event, solve is boolean
+*   Event listener for keyboard
+*   Parameters: evt is key event, solve is boolean
+*
+*   @param {KeyEvent} evt
+*   @param {boolean} solve
+*
+*   @returns null
 */
 cubeApp.onKeyDown = function(evt, solve){
     if(evt.code == "ShiftLeft" || evt.code == 'ShiftRight'){ //Reverse direction
@@ -397,7 +427,10 @@ cubeApp.onKeyDown = function(evt, solve){
 }
 
 /**
-* Print text to canvas screen
+*   Print text to canvas screen
+*
+*   @params null
+*   @returns null
 */
 function canvasText(){
     // look up the text canvas.
@@ -438,7 +471,11 @@ function canvasText(){
     ctx.fillText('PRESS ENTER TO SOLVE', 50, 520);
  }
 /**
-* Lock all the faces (0-5) except parameter face 
+*   Lock all the faces (0-5) except parameter face 
+*
+*   @param {int} face
+*  
+*   @returns null
 */
  cubeApp.lockFaces = function(face){
     for(var i = 0; i < this.locked.length; i ++){
@@ -448,7 +485,10 @@ function canvasText(){
     }
 }
 /**
-* Unlock every face
+*   Unlock every face
+*
+*   @params null
+*   @returns null
 */
 cubeApp.unlockFaces = function(){
     for(var i = 0; i < this.locked.length; i ++){
@@ -456,7 +496,10 @@ cubeApp.unlockFaces = function(){
     }   
 }
 /**
-* Scramble the cube (Called repeatedly by run() as necessary)
+*   Scramble the cube (Called repeatedly by run() as necessary)
+*
+*   @params null
+*   @returns null
 */
 cubeApp.scrambleCube = function(){
     var evt = {code: null};
@@ -466,13 +509,19 @@ cubeApp.scrambleCube = function(){
     this.onKeyDown(evt) // Make the move
 }
 /**
-* Animate the cube (Called repeatedly by run func until 360 degree rotation completed)
+*   Animate the cube (Called repeatedly by run func until 360 degree rotation completed)
+*
+*   @params null
+*   @returns null
 */
 cubeApp.animateCube = function(){
     this.pivot.rotateY(Math.PI/32)
 }
 /**
-* Solve the cube (Called repeatedly by run func until solved)
+*   Solve the cube (Called repeatedly by run func until solved)
+*
+*   @params null
+*   @returns null
 */
 cubeApp.solveCube = function(){
     var move = this.stack[this.stack.length-1].move; //Pop top move off stack
@@ -510,4 +559,3 @@ cubeApp.solveCube = function(){
         this.onKeyDown({code : 'KeyB'}, true)
     }
 }
-
